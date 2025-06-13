@@ -1,0 +1,12 @@
+Function,Total Time (seconds) over 10000 calls with 100 length
+method_regex,0.0037776669996674173
+method_regex_replace,0.005480333000377868
+method_loop_in,0.008526375000656117
+method_any_gen,0.015478958999665338
+method_set_intersection,0.015495083000132581
+method_map,0.02108470799976203
+method_filter,0.0265464999993128
+method_recursion,0.040773541000817204
+method_prime,0.077477374999944
+method_loop_or,0.08200274999944668
+method_nested_loop,0.10495637499843724

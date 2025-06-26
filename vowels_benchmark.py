@@ -14,6 +14,7 @@ half = NUM_STRINGS // 2
 REPEATS = 5
 STRING_LENGTH = 100
 VOWELS = "aeiouAEIOU"
+SET_VOWELS = set(VOWELS)
 VOWELS_AT_END = False
 
 # Generate half strings with a vowel inserted
@@ -117,8 +118,31 @@ def method_in_set_hardcode(s: str) -> bool:
             return True
     return False
 
+def method_in_set_hardcode_in_loop(s: str) -> bool:
+    for c in s:
+        if c in {'a', 'e', 'i', 'o', 'u', 'A', 'E', 'I', 'O', 'U'}:
+            return True
+    return False
+
 def method_in_set_break(s: str) -> bool:
     vowels = set("aeiouAEIOU")
+    for c in s:
+        if c in vowels:
+            break
+    else:
+        return False
+    return True
+
+def method_in_set_predefined(s: str) -> bool:
+    for c in s:
+        if c in SET_VOWELS:
+            break
+    else:
+        return False
+    return True
+
+def method_in_set_predefined_local_lookup(s: str) -> bool:
+    vowels = SET_VOWELS
     for c in s:
         if c in vowels:
             break
@@ -141,9 +165,11 @@ functions = [
     method_recursion, # Comment this out with long strings
     method_nested_loop,
     method_prime,
+    method_in_set_hardcode_in_loop,
+    method_in_set_break,
+    method_in_set_predefined,
     method_in_set,
     method_in_set_hardcode,
-    method_in_set_break,
 ]
 
 # --- Benchmarking ---

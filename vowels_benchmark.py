@@ -1,10 +1,11 @@
+import csv
 import re
 import timeit
 import random
 import string
-import pandas as pd
 from functools import reduce
 from math import factorial, gcd
+import collections
 
 # --- Generate test strings: Half with vowels, half without vowels ---
 
@@ -102,6 +103,29 @@ def method_prime(s: str) -> bool:
     except Exception:
         return False
 
+def method_in_set(s: str) -> bool:
+    vowels = set("aeiouAEIOU")
+    for c in s:
+        if c in vowels:
+            return True
+    return False
+
+def method_in_set_hardcode(s: str) -> bool:
+    vowels = {'a', 'e', 'i', 'o', 'u', 'A', 'E', 'I', 'O', 'U'}
+    for c in s:
+        if c in vowels:
+            return True
+    return False
+
+def method_in_set_break(s: str) -> bool:
+    vowels = set("aeiouAEIOU")
+    for c in s:
+        if c in vowels:
+            break
+    else:
+        return False
+    return True
+
 
 # --- List of all functions ---
 functions = [
@@ -117,24 +141,28 @@ functions = [
     method_recursion, # Comment this out with long strings
     method_nested_loop,
     method_prime,
+    method_in_set,
+    method_in_set_hardcode,
+    method_in_set_break,
 ]
 
 # --- Benchmarking ---
-benchmark_results = {}
+benchmark_results = []
+Result = collections.namedtuple('Result', 'time,name')
 
+max_func_len = 0
 for func in functions:
     def run():
         for _ in range(REPEATS):
             for s in test_strings:
                 func(s)
     exec_time = min(timeit.repeat(run, repeat=3, number=1))
-    benchmark_results[func.__name__] = exec_time
+    max_func_len = max(max_func_len, len(func.__name__))
+    benchmark_results.append(Result(name=func.__name__, time=exec_time))
 
-# --- Output results as a DataFrame and print ---
-df_results = pd.DataFrame(
-    sorted(benchmark_results.items(), key=lambda x: x[1]),
-    columns=["Function", f"Total Time (seconds) over {NUM_STRINGS * REPEATS} calls with {STRING_LENGTH} length"]
-)
-
-print(df_results.to_string(index=False))
-df_results.to_csv(f'vowels_benchmark_{STRING_LENGTH}_{VOWELS_AT_END}.csv', index=False)
+with open(f'vowels_benchmark_{STRING_LENGTH}_{VOWELS_AT_END}.csv', 'w') as f:
+    csvwriter = csv.writer(f)
+    print(f'{"Function":<{max_func_len}}\tTotal Time (seconds) over {NUM_STRINGS * REPEATS} calls with {STRING_LENGTH} length')
+    for result in sorted(benchmark_results):
+        print(f'{result.name:<{max_func_len}}\t{result.time:.6f}')
+        csvwriter.writerow(result)
